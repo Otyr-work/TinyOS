@@ -32,3 +32,27 @@ output something here
 - physical memory
 - virtual memory
 - kernel heap
+
+4. Processes
+- Process structure 
+- Context switching
+- address spaces
+- system calls
+
+5. Scheduler
+- Round Robin
+- ?
+- Profit
+
+6. File System
+- Read from disk
+- Write to disk
+
+7. Userspace 
+- kernel 
+- FileSystem
+- init 
+- shell
+- user programs
+
+
