@@ -1,0 +1,34 @@
+The implementation is going to incorporate things like:
+
+file manup
+- 
+
+processes
+- fork
+- execve
+- waitpid
+- pipes
+- redirection
+- environment variables
+- signals 
+- background processes
+
+
+scope:
+1. Boot:
+- BIOS / UEFI
+- bootloader
+- kernel entry
+
+output something here
+
+2. kernel init:
+- CPU setup
+- Global Descriptor Table
+- Interrupt Descriptor Table
+- interrupts 
+
+3. Memory:
+- physical memory
+- virtual memory
+- kernel heap
