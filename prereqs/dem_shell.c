@@ -1,6 +1,8 @@
+#include <stdio.h>
+
 int main() {
     
-    printf("shellom$ ");
+    printf("shellom$ \n");
     
     // read the command from the user
     
