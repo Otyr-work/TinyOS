@@ -8,7 +8,7 @@
 // - - - - - - - - - -
 
 #define MAX_INPUT 256
-
+#define MAX_ARGS 16
 
 
 #include <stdio.h>
@@ -26,21 +26,34 @@ int main() {
     
     while(flag != OUT) {
         
+        // checking if user wants to exit or no input was given
+        
         fflush(stdout);
         if (fgets(user_input, sizeof(user_input), stdin) == NULL) flag = OUT;
         
         user_input[strcspn(user_input, "\n")] = '\0';
         
-        if (strcmp(user_input, "pwd") == 0 || strcmp(user_input, "ls") == 0|| strcmp(user_input, "exit") == 0 ) flag = OUT;
+        if (strcmp(user_input, "exit") == 0 ) flag = OUT;
+        else if (user_input[0] == '\0') continue;
+        
+        // splitting command into parts(tokens)
+        
+        char *token = strtok(user_input, " ");
+        char *command_string[MAX_ARGS];
+        int arg_count = 0;
+        
+        
+        while (token != NULL && arg_count < MAX_ARGS - 1) {
+            
+            command_string[arg_count++] = token;
+            token = strtok(NULL, "");
+            
+        }
             
     }
     
     printf("Done");
-    
-    // read the command from the user
-    
-    // split the command into arguments
-    
+            
     // create child process running the command
     
     // wait for it to finish
