@@ -13,9 +13,9 @@
 
 #include <stdio.h>
 #include <string.h>
-
-
-
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 int main() {
     
@@ -46,16 +46,32 @@ int main() {
         while (token != NULL && arg_count < MAX_ARGS - 1) {
             
             command_string[arg_count++] = token;
-            token = strtok(NULL, "");
+            token = strtok(NULL, " ");
             
+        }
+        
+        command_string[arg_count] = NULL;
+        
+        pid_t pid = fork();
+        
+        if ( pid < 0 ) 
+        {
+            perror("fork");
+            continue;
+        }
+        
+        if (pid == 0) {
+            
+            execvp(command_string[0], command_string);
+            
+            perror("execvp");
+            exit(EXIT_FAILURE);
         }
             
     }
     
     printf("Done");
-            
-    // create child process running the command
-    
+                
     // wait for it to finish
     
     return NO_ERROR;
