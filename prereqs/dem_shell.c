@@ -16,6 +16,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/wait.h>
 
 int main() {
     
@@ -67,12 +68,10 @@ int main() {
             perror("execvp");
             exit(EXIT_FAILURE);
         }
+        
+        waitpid(pid, NULL, 0);
             
     }
-    
-    printf("Done");
-                
-    // wait for it to finish
     
     return NO_ERROR;
     
