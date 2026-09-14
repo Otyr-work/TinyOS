@@ -1,4 +1,5 @@
 #define NO_ERROR 0
+#define ALIGNMENT 8
 
 #include <stdio.h> 
 #include <unistd.h> 
@@ -23,9 +24,17 @@ struct block* heap_start = NULL;
 
 
 
+size_t align_size(size_t size)
+{
+    return (size + ALIGNMENT - 1) & ~(ALIGNMENT -1);
+}
+
+
 
 
 void* dem_malloc(size_t memo_size){
+    
+    memo_size = align_size(memo_size);
     
     // re-use already freed blocks
     struct block * current_blk = heap_start;
@@ -103,6 +112,34 @@ void dem_free(void* ptr) {
     
     block_ptr->free = 1;
     
+    struct block * current_blk = heap_start;
+    
+    while (current_blk != NULL) {
+        
+        if (current_blk->next_ptr == block_ptr) break;
+        
+        current_blk = current_blk->next_ptr;
+        
+    } 
+    
+    if (block_ptr->next_ptr != NULL && block_ptr->next_ptr->free) {
+        
+        struct block * next_blk = block_ptr->next_ptr;
+        
+        block_ptr->memo_allocated_size += sizeof(struct block) + next_blk->memo_allocated_size;
+        
+        block_ptr->next_ptr = next_blk->next_ptr;
+        
+    }
+    
+    if (current_blk != NULL && current_blk != block_ptr && current_blk->free) {
+        
+        current_blk->memo_allocated_size += sizeof(struct block) + block_ptr->memo_allocated_size;
+        
+        current_blk->next_ptr = block_ptr->next_ptr;
+        
+    }
+    
 }
 
 
@@ -112,7 +149,7 @@ void dem_free(void* ptr) {
 int main() {
 
     int *numbers = dem_malloc(5 * sizeof(int));
-    int *more_numbers = dem_malloc(16 * sizeof(int));
+    int *more_numbers = dem_malloc(8 * sizeof(int));
     int *even_more_numbers = dem_malloc(8 * sizeof(int));
     
     
@@ -123,23 +160,10 @@ int main() {
     
 
     dem_free(more_numbers);
+    dem_free(even_more_numbers);
     
-    
-    
-    int *reused_numbers = dem_malloc(2*sizeof(int));
-    
-    
-    
-    if(reused_numbers == NULL) return 1;
-    
-    printf("Original freed address: %p\n", (void *)more_numbers);
-    printf("reused addresses: %p\n", (void *)reused_numbers);
-    
-    
-    
-    printf("\nBookkeeping:\n");
+    printf("\nBookkeeping after freeing adjacent ");
 
-    
 
     struct block *current_blk = heap_start;
 
