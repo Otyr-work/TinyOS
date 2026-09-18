@@ -10,13 +10,12 @@
 
 
 void * worker (void * args) {
+    
+    int * number = (int *) args;
 
-
-    printf("This is the worker thread\n");
+    printf("worker recieved: %d\n", *number);
 
     printf("Thread ID: %ld\n", syscall(SYS_gettid));
-
-    sleep(15);
 
     return NULL;
 
@@ -27,12 +26,14 @@ void * worker (void * args) {
 
 
 int main() {
+    
+    int number = 42;
 
     printf("Thread ID: %ld\n", syscall(SYS_gettid));
 
     pthread_t thread;
 
-    pthread_create(&thread, NULL, worker, NULL);
+    pthread_create(&thread, NULL, worker, &number);
 
     pthread_join(thread, NULL);
 
