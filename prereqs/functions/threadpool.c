@@ -5,15 +5,18 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-
-
+struct job {
+    
+    int number;
+    
+};
 
 
 void * worker (void * args) {
     
-    int * number = (int *) args;
+    struct job * curr_job = (struct job *)args;
 
-    printf("worker recieved: %d\n", *number);
+    printf("worker recieved: %d\n", curr_job->number);
 
     printf("Thread ID: %ld\n", syscall(SYS_gettid));
 
@@ -32,8 +35,11 @@ int main() {
     printf("Thread ID: %ld\n", syscall(SYS_gettid));
 
     pthread_t thread;
+    
+    
+    struct job c_job = { .number = 42 };
 
-    pthread_create(&thread, NULL, worker, &number);
+    pthread_create(&thread, NULL, worker, &c_job);
 
     pthread_join(thread, NULL);
 
