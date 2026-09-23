@@ -7,16 +7,25 @@
 
 struct job {
     
-    int number;
+    void (*function)(void *);
+    void * argument;
     
 };
 
+
+void print_function(void * args) {
+    
+    int * number = (int *) args;
+    
+    printf("worker recieved: %d\n", *number);
+    
+}
 
 void * worker (void * args) {
     
     struct job * curr_job = (struct job *)args;
 
-    printf("worker recieved: %d\n", curr_job->number);
+   curr_job->function(curr_job->argument);
 
     printf("Thread ID: %ld\n", syscall(SYS_gettid));
 
@@ -31,13 +40,21 @@ void * worker (void * args) {
 int main() {
     
     int number = 42;
+    
+    
+    struct job c_job = { 
+        .function = print_function,
+        .argument = &number
+    };
 
+    
+
+    
     printf("Thread ID: %ld\n", syscall(SYS_gettid));
 
     pthread_t thread;
     
     
-    struct job c_job = { .number = 42 };
 
     pthread_create(&thread, NULL, worker, &c_job);
 
