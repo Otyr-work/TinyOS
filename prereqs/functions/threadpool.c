@@ -39,26 +39,31 @@ void * worker (void * args) {
 
 int main() {
     
-    int number = 42;
+    int number_1 = 42;
+    int number_2 = 100;
+    int number_3 = 777;
     
     
-    struct job c_job = { 
-        .function = print_function,
-        .argument = &number
+    struct job jobs[3] = { 
+    { .function = print_function, .argument = &number_1 },
+    { .function = print_function, .argument = &number_2 },
+    { .function = print_function, .argument = &number_3 }
+    
     };
 
-    
+    for (int i = 0; i < 3; i++ ) {
+        
+        pthread_t thread;
+        
+        pthread_create(&thread, NULL, worker, &jobs[i]);
+        
+        pthread_join(thread, NULL);
+        
+    }
 
     
     printf("Thread ID: %ld\n", syscall(SYS_gettid));
 
-    pthread_t thread;
-    
-    
-
-    pthread_create(&thread, NULL, worker, &c_job);
-
-    pthread_join(thread, NULL);
 
     printf("Meain thread done\n\n");
 
